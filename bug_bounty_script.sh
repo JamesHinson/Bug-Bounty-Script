@@ -128,7 +128,7 @@ for target_url in "${target_urls[@]}"; do
 
     # Perform technology stack detection with Wappalyzer
     echo -e "${GREEN}Performing technology stack detection with Wappalyzer${NC}"
-    wappalyzer "$target_url"
+    wappalyzer "http://$target_url" # Installed script manually, so there was a quirk with getting it working without adding `http://`
 
     echo -e "${GREEN}Scanning target: $target_url${NC}"
     nmap -p 80,443 -T4 -A -Pn --max-parallelism $nmap_threads $target_url
@@ -146,13 +146,15 @@ for target_url in "${target_urls[@]}"; do
     dirb "http://$target_url" -r -o "$output_directory/$target_url-dirb.txt" -t $dirb_threads
 
     echo -e "${GREEN}Scanning for XSS vulnerabilities with Xsser${NC}"
-    xsser -u $target_url
+    # Installed script manually and couldn't get binary PATH working properly, so including manually
+    /home/mason/tools/xsser/xsser -u $target_url 
 
     echo -e "${GREEN}Checking for SQL injection with SQLMap${NC}"
     sqlmap -u $target_url --batch
 
     echo -e "${GREEN}Running Nuclei for vulnerability scanning${NC}"
-    nuclei -l "$output_directory/$target_url-subdomains.txt" -t vulnerabilities/ -o "$output_directory/$target_url-nuclei.txt"
+    # Installed script manually and couldn't get binary PATH working properly, so including manually
+    /usr/local/bin/nuclei/bin/nuclei -l "$output_directory/$target_url-subdomains.txt" -t vulnerabilities/ -o "$output_directory/$target_url-nuclei.txt"
 
     echo -e "${GREEN}Performing automated reconnaissance with Amass${NC}"
     amass enum -d $target_url -o "$output_directory/$target_url-amass.txt"
