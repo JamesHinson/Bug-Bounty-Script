@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set the target URL
-url="https://example.com"
+url="target.com"
 
 # Set the output file
 output_file="recon_results.txt"
